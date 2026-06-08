@@ -1,0 +1,533 @@
+/*
+ * style.css — стили DevQuest
+ * Чистый, дружелюбный стиль (Clean & Playful) в духе Duolingo и Notion
+ */
+
+/* ========== СБРОС И БАЗОВЫЕ НАСТРОЙКИ ========== */
+
+/* Убираем отступы у всех элементов, задаём box-sizing */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Корневые переменные — все цвета и размеры собраны в одном месте */
+:root {
+    --bg: #f1f5f9;              /* Светлый мягкий фон */
+    --card-bg: #ffffff;          /* Белый цвет карточек */
+    --text-primary: #1e293b;     /* Основной тёмный текст */
+    --text-secondary: #64748b;   /* Второстепенный серый текст */
+    --accent-easy: #34d399;      /* Мятный — для лёгких квестов */
+    --accent-medium: #fb923c;    /* Оранжевый — для средних */
+    --accent-hard: #a78bfa;      /* Лавандовый — для сложных */
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);     /* Мягкая тень */
+    --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.10); /* Тень при наведении */
+    --radius-card: 20px;         /* Радиус скругления карточек */
+    --radius-tag: 12px;          /* Радиус скругления тегов */
+    --radius-btn: 12px;          /* Радиус скругления кнопок */
+    --transition: 0.3s ease;     /* Стандартная длительность анимации */
+}
+
+/* Базовые стили для всей страницы */
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Контейнер — центрирует контент по горизонтали */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+
+/* ========== ШАПКА (HEADER) ========== */
+
+.header {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); /* Градиент: от индиго к фиолетовому */
+    color: white;
+    padding: 40px 0 30px;
+    border-radius: 0 0 30px 30px; /* Скругление нижних углов */
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+}
+
+.header__inner {
+    text-align: center;
+}
+
+.header__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.header__logo-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.header__title {
+    font-size: 2.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.header__subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-weight: 400;
+    margin-bottom: 14px;
+}
+
+/* Счётчик выполненных квестов в шапке */
+.header__counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(4px);
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.header__counter-value {
+    font-weight: 800;
+    font-size: 1.2rem;
+    min-width: 24px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+/* Анимация "всплеска" при увеличении счётчика */
+.header__counter-value--bump {
+    animation: counterBump 0.35s ease;
+}
+
+@keyframes counterBump {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.35); }
+    100% { transform: scale(1); }
+}
+
+
+/* ========== ПАНЕЛЬ УПРАВЛЕНИЯ (ПОИСК + ФИЛЬТРЫ) ========== */
+
+.controls {
+    margin: 32px 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Поле поиска */
+.search-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 20px 14px 48px; /* Отступ слева для иконки */
+    font-size: 1rem;
+    font-family: inherit;
+    border: 2px solid #e2e8f0;
+    border-radius: var(--radius-btn);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+/* Состояния поля ввода: фокус, заполнение */
+.search-input:focus {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.15);
+}
+
+.search-input::placeholder {
+    color: #94a3b8;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: #94a3b8;
+    pointer-events: none; /* Иконка не перехватывает клики */
+}
+
+/* Контейнер тегов-фильтров */
+.tags-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+
+/* ========== ТЕГИ (ОБЩИЕ СТИЛИ) ========== */
+
+.tag {
+    display: inline-block;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: var(--radius-tag);
+    background: #f1f5f9;
+    color: var(--text-secondary);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all var(--transition);
+    user-select: none; /* Запрет выделения текста при клике */
+}
+
+.tag:hover {
+    background: #e2e8f0;
+    transform: translateY(-1px);
+}
+
+/* Активный тег-фильтр — яркий, насыщенный, с нижней обводкой */
+.tag--active {
+    background: #6366f1;
+    color: white;
+    border-color: #6366f1;
+    box-shadow: 0 2px 0 #4f46e5, 0 4px 12px rgba(99, 102, 241, 0.3);
+    transform: scale(1.04);
+}
+
+.tag--active:hover {
+    background: #4f46e5;
+    transform: scale(1.04) translateY(-1px);
+}
+
+
+/* ========== СЕТКА КАРТОЧЕК ========== */
+
+.quests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    padding-bottom: 40px;
+}
+
+
+/* ========== КАРТОЧКА КВЕСТА ========== */
+
+.quest-card {
+    position: relative;
+    background: var(--card-bg);
+    border-radius: var(--radius-card);
+    padding: 28px 24px 24px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease, margin 0.35s ease;
+    /* Анимация появления: карточка появляется сдвигом и прозрачностью */
+    animation: cardAppear 0.5s ease backwards;
+}
+
+/* Задержки анимации для каждой карточки — задаются через JS */
+.quest-card:nth-child(1) { animation-delay: 0.05s; }
+.quest-card:nth-child(2) { animation-delay: 0.10s; }
+.quest-card:nth-child(3) { animation-delay: 0.15s; }
+.quest-card:nth-child(4) { animation-delay: 0.20s; }
+.quest-card:nth-child(5) { animation-delay: 0.25s; }
+.quest-card:nth-child(6) { animation-delay: 0.30s; }
+.quest-card:nth-child(7) { animation-delay: 0.35s; }
+.quest-card:nth-child(8) { animation-delay: 0.40s; }
+.quest-card:nth-child(9) { animation-delay: 0.45s; }
+.quest-card:nth-child(10) { animation-delay: 0.50s; }
+
+/* Эффект при наведении: карточка приподнимается */
+.quest-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Ключевой кадр анимации появления карточки */
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Бейдж с наградой (XP) — цветовая маркировка сложности */
+.quest-card__reward {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 10px;
+    color: white;
+}
+
+/* Цветовые классы для награды — задаются через JS в зависимости от тегов */
+.reward--easy {
+    background: var(--accent-easy);
+    box-shadow: 0 2px 10px rgba(52, 211, 153, 0.35);
+}
+
+.reward--medium {
+    background: var(--accent-medium);
+    box-shadow: 0 2px 10px rgba(251, 146, 60, 0.35);
+}
+
+.reward--hard {
+    background: var(--accent-hard);
+    box-shadow: 0 2px 10px rgba(167, 139, 250, 0.35);
+}
+
+/* Цветная полоска статуса сверху карточки */
+.quest-card__status-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    border-radius: 20px 20px 0 0;
+    background: transparent;
+    transition: background 0.35s ease;
+}
+
+/* Оранжевая полоска — квест в процессе */
+.quest-card--progress .quest-card__status-bar {
+    background: #fb923c;
+    box-shadow: 0 0 12px rgba(251, 146, 60, 0.3);
+}
+
+/* Зелёная полоска — квест выполнен */
+.quest-card--done .quest-card__status-bar {
+    background: #34d399;
+    box-shadow: 0 0 12px rgba(52, 211, 153, 0.3);
+}
+
+/* Бейдж статуса (огонёк "В процессе" / галочка "Выполнено") */
+.quest-card__status-badge {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    padding: 3px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 8px;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.quest-card__status-badge--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.quest-card__status-badge--progress {
+    background: #fff7ed;
+    color: #c2410c;
+    border: 1.5px solid #fed7aa;
+}
+
+.quest-card__status-badge--done {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1.5px solid #a7f3d0;
+}
+
+/* Заголовок квеста */
+.quest-card__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    padding-right: 80px; /* Отступ, чтобы не налезать на XP-бейдж */
+    line-height: 1.3;
+}
+
+/* Описание квеста */
+.quest-card__desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+/* Контейнер тегов внутри карточки */
+.quest-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+/* Тег внутри карточки (неактивный, для отображения) */
+.quest-card__tag {
+    background: #f1f5f9;
+    color: var(--text-secondary);
+    cursor: default;
+    font-size: 0.8rem;
+    padding: 4px 12px;
+}
+
+/* ========== КНОПКА КВЕСТА (ТРИ СОСТОЯНИЯ) ========== */
+
+/* Базовая кнопка "Принять квест" */
+.quest-card__btn {
+    padding: 12px 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    color: white;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    transition: all var(--transition);
+    align-self: stretch;
+    letter-spacing: 0.3px;
+}
+
+.quest-card__btn:hover {
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    transform: translateY(-1px);
+}
+
+.quest-card__btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+/* Состояние "В процессе" — оранжевая кнопка */
+.quest-card__btn--active {
+    background: linear-gradient(135deg, #fb923c, #f97316);
+}
+
+.quest-card__btn--active:hover {
+    box-shadow: 0 4px 15px rgba(251, 146, 60, 0.4);
+}
+
+/* Состояние "Выполнено" — серая неактивная кнопка */
+.quest-card__btn--done {
+    background: #d1d5db;
+    color: #9ca3af;
+    cursor: default;
+    box-shadow: none;
+    transform: none;
+}
+
+.quest-card__btn--done:hover {
+    box-shadow: none;
+    transform: none;
+}
+
+
+/* ========== СКРЫТИЕ КАРТОЧЕК ПРИ ФИЛЬТРАЦИИ ========== */
+
+/* Фаза 1: карточка плавно исчезает (opacity + scale) */
+.quest-card--fading {
+    opacity: 0;
+    transform: scale(0.85);
+    pointer-events: none;
+}
+
+/* Фаза 2: после завершения анимации карточка убирается из потока */
+.quest-card--hidden {
+    display: none;
+}
+
+
+/* ========== ПОДВАЛ (FOOTER) ========== */
+
+.footer {
+    margin-top: auto; /* Прижимаем подвал к низу страницы */
+    background: #1e293b;
+    color: #94a3b8;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 0.85rem;
+}
+
+
+/* ========== АДАПТИВНОСТЬ (МОБИЛЬНЫЕ УСТРОЙСТВА) ========== */
+
+/* Планшеты и небольшие экраны */
+@media (max-width: 768px) {
+    .header {
+        padding: 28px 0 20px;
+    }
+
+    .header__title {
+        font-size: 1.8rem;
+    }
+
+    .header__subtitle {
+        font-size: 0.95rem;
+    }
+
+    .quests-grid {
+        grid-template-columns: 1fr; /* Одна колонка на мобильных */
+        gap: 16px;
+    }
+
+    .quest-card {
+        padding: 22px 18px 20px;
+    }
+
+    .quest-card__title {
+        font-size: 1.1rem;
+        padding-right: 70px;
+    }
+
+    .controls {
+        margin: 20px 0 16px;
+    }
+}
+
+/* Маленькие телефоны */
+@media (max-width: 480px) {
+    .header__title {
+        font-size: 1.5rem;
+    }
+
+    .search-input {
+        padding: 12px 16px 12px 42px;
+        font-size: 0.9rem;
+    }
+
+    .tags-filter {
+        gap: 8px;
+    }
+
+    .tag {
+        font-size: 0.78rem;
+        padding: 5px 10px;
+    }
+}

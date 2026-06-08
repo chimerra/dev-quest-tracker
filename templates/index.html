@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <!-- Viewport для правильного отображения на мобильных устройствах -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevQuest — Трекер IT-квестов</title>
+
+    <!-- Google Font: Inter — современный, чистый sans-serif шрифт -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Наши CSS-стили -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- ШАПКА САЙТА (Header) -->
+    <header class="header">
+        <div class="container">
+            <div class="header__inner">
+                <!-- Логотип с иконкой 🎮 (игровой стиль) -->
+                <div class="header__logo">
+                    <span class="header__logo-icon">&#127918;</span>
+                    <h1 class="header__title">DevQuest</h1>
+                </div>
+                <p class="header__subtitle">Стань разработчиком, проходя квесты!</p>
+                <div class="header__counter">
+                    <span class="header__counter-label">Выполнено квестов:</span>
+                    <span class="header__counter-value" id="completedCounter">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <main class="main">
+        <div class="container">
+
+            <!-- ПАНЕЛЬ УПРАВЛЕНИЯ: ПОИСК + ТЕГИ -->
+            <section class="controls">
+
+                <!-- Поле поиска с иконкой лупы -->
+                <div class="search-wrapper">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="search-input"
+                        placeholder="Найди свой квест..."
+                        autocomplete="off"
+                    >
+                    <span class="search-icon">&#128269;</span>
+                </div>
+
+                <!-- Фильтр по тегам — динамически заполняется из JavaScript -->
+                <div class="tags-filter" id="tagsFilter">
+                    <button class="tag tag--active" data-tag="all">Все квесты</button>
+                </div>
+            </section>
+
+            <!-- СЕТКА КАРТОЧЕК КВЕСТОВ -->
+            <section class="quests-grid" id="questsGrid">
+                <!--
+                  Jinja2 цикл: для каждого квеста из списка quests (переданного из app.py)
+                  создаётся карточка с данными из соответствующего словаря.
+                -->
+                {% for quest in quests %}
+                <div class="quest-card" data-id="{{ quest.id }}" data-tags="{{ quest.tags | join(',') }}">
+                    <!-- Цветная полоска статуса сверху (скрыта по умолчанию) -->
+                    <div class="quest-card__status-bar"></div>
+
+                    <!-- Бейдж с наградой (XP) -->
+                    <div class="quest-card__reward">{{ quest.reward }}</div>
+
+                    <!-- Бейдж статуса (показывается в процессе/выполнено) -->
+                    <div class="quest-card__status-badge"></div>
+
+                    <!-- Заголовок квеста -->
+                    <h2 class="quest-card__title">{{ quest.title }}</h2>
+
+                    <!-- Описание квеста -->
+                    <p class="quest-card__desc">{{ quest.description }}</p>
+
+                    <!-- Контейнер тегов -->
+                    <div class="quest-card__tags">
+                        {% for tag in quest.tags %}
+                        <span class="tag quest-card__tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Кнопка с тремя состояниями -->
+                    <button class="quest-card__btn" data-id="{{ quest.id }}">Принять квест</button>
+                </div>
+                {% endfor %}
+            </section>
+
+        </div>
+    </main>
+
+    <!-- ПОДВАЛ -->
+    <footer class="footer">
+        <div class="container">
+            <p>DevQuest &copy; 2026 — Учись программировать в формате игры</p>
+        </div>
+    </footer>
+
+    <!-- Наш JavaScript-файл -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
